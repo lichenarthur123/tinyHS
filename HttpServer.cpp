@@ -55,7 +55,7 @@ void HttpServer::run()
             }
             else if(fd & EPOLLIN){
 							  std::cout<<"in"<<std::endl;
-                _pool->add(new Http_request(epollfd,fd));
+                _pool->add(new Socket_process(epollfd,fd));
             }
             //else if(fd & EPOLLOUT){
             //    _pool->add(new Http_request(epollfd,sock));

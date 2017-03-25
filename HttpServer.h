@@ -3,6 +3,7 @@
 
 #include<iostream>
 #include "ThreadsPool.h"
+#include "Socket_process.h"
 #include<sys/epoll.h>
 #include<sys/socket.h>
 #include<netinet/in.h>

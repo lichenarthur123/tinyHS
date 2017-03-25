@@ -6,7 +6,7 @@
 #include<iostream>
 #include<pthread.h>
 #include "Sem_Lock.h"
-#include "Http_request.h"
+#include "Socket_process.h"
 
 #define MAX_REQUEST 1000000
 
@@ -16,7 +16,7 @@ class ThreadsPool
         int _thread_num;
         int _request_max;
         std::vector<pthread_t> threads;
-        std::queue<Http_request*> r_queue;
+        std::queue<Socket_process*> r_queue;
         Lock locker;
         Semaphore status_queue;
         bool is_work;
@@ -27,7 +27,7 @@ class ThreadsPool
     public:
         ThreadsPool(int thread_num = 20,int request_max = MAX_REQUEST);
         virtual ~ThreadsPool();
-        bool add(Http_request *request);
+        bool add(Socket_process *request);
     protected:
 };
 

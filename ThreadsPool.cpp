@@ -22,7 +22,7 @@ ThreadsPool::~ThreadsPool(){
     is_work = false;
 }
 
-bool ThreadsPool::add(Http_request *request){
+bool ThreadsPool::add(Socket_process *request){
     locker.lock();
     if(r_queue.size() >= _request_max){
         locker.unlock();
@@ -48,7 +48,7 @@ void ThreadsPool::run(){
             locker.unlock();
             continue;
         }
-        Http_request *r = r_queue.front();
+        Socket_process *r = r_queue.front();
         r_queue.pop();
         locker.unlock();
         if(r){
