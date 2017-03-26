@@ -7,7 +7,8 @@
 #include<fcntl.h>
 #include "http_parser.h"
 
-#define READ_BUF_SIZE 
+#define READ_BUF_SIZE 2048
+#define WRITE_BUF_SIZE 2048
 class Socket_process
 {
  public:
@@ -16,6 +17,7 @@ class Socket_process
   void process();
  private:
   void read_from_socket();
+  void process();
   int _epollfd;
   int _conn;
   char *read_buffer;
