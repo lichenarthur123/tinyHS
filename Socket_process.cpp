@@ -17,5 +17,16 @@ Socket_process::~Socket_process()
 	delete[] write_buffer;
 }
 Socket_process::read_from_socket(){
-	
+	while(true){
+		int res = recv(_conn,read_buffer,READ_BUF_SIZE,0);
+		if(res == 0){
+			close(_conn);
+			break;
+		}
+		else if(res < 0){
+			if(errno == EINTR || errno == EAGAIN){
+				
+			}
+		}
+	}
 }
