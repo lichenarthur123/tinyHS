@@ -1,23 +1,21 @@
+#ifndef CONNECTIONS_H
+#define CONNECTIONS_H
 #include<iostream>
+#include<string.h>
 #include<map>
 #include<pthread.h>
 #include "Sem_Lock.h"
-enum Req_method{GET,POST};
-struct Request_line{
-	
-};
-struct Request{
-	char *body;
-	bool is_finish;
-	
-};
+#include "Http_parser.h"
 
-class ConnectionPool{
+
+class Connections_unfinish{
 	public:
-		ConnectionPool();
-		virtual ~ConnectionPool();
-		
+		Connections_unfinish();
+		virtual ~Connections_unfinish();
+		Request* get_connection(int fd);
+		bool add_connection(int fd,Request req);
 	private:
 		Lock locker;
-		map<>
+		map<int,Request> Req_set;
 }
+#endif
