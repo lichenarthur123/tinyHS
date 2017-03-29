@@ -8,14 +8,13 @@
 #include "Http_parser.h"
 
 
-class Connections_unfinish{
+class Connections{
 	public:
-		Connections_unfinish();
-		virtual ~Connections_unfinish();
-		Request* get_connection(int fd);
-		bool add_connection(int fd,Request req);
+		Connections();
+		virtual ~Connections();
 	private:
-		Lock locker;
-		map<int,Request> Req_set;
+		Request *req;
+		int fd;
+		time_t alive_time;
 }
 #endif
