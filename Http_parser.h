@@ -1,8 +1,10 @@
 #ifndef HTTP_PARSER_H
 #define HTTP_PARSER_H
-
+#include<iostream>
+#include<string.h>
 enum Req_method{GET,POST};
-enum Http_version{HTTP09,HTTP10,HTTP11,HTTP20}
+enum Http_version{HTTP09,HTTP10,HTTP11,HTTP20};
+enum Parser_status{COMPLETE,MORE_DATA};
 struct Request_line{
 	char *context;
 	Req_method method;
@@ -28,6 +30,16 @@ struct Request{
 	
 };
 
+class Http_parser{
+	public:
+		Http_parser(char *req_context,Request *req = NULL);
+		~Http_parser();
+		bool is_complete;
+		Parser_status parser();
+	private:
+		char *req_context;
+		Request *req;
+};
 
 
 #endif

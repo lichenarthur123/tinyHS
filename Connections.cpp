@@ -20,7 +20,7 @@ Request* Connections::get_connection(int fd){
 
 bool Connections::add_connection(int fd, Request req){
 	locker.lock();
-	Req_set.insert(make_pair<int,string>(fd,req));
+	Req_set.insert(make_pair<int,Request>(fd,req));
 	bool ret = true;
 	if(Req_set.find(fd)==Req_set.end())
 		ret = false;
