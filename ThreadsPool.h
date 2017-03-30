@@ -3,7 +3,9 @@
 
 #include<queue>
 #include<vector>
+#include<map>
 #include<iostream>
+#include "Connections.h"
 #include<pthread.h>
 #include "Sem_Lock.h"
 #include "Socket_process.h"
@@ -17,6 +19,7 @@ class ThreadsPool
         int _request_max;
         std::vector<pthread_t> threads;
         std::queue<Socket_process*> r_queue;
+		std::map<int,Connections> conn_pool;
         Lock locker;
         Semaphore status_queue;
         bool is_work;

@@ -4,7 +4,7 @@
 #include<string.h>
 enum Req_method{GET,POST};
 enum Http_version{HTTP09,HTTP10,HTTP11,HTTP20};
-enum Parser_status{COMPLETE,MORE_DATA};
+//enum Parser_status{COMPLETE,MORE_DATA};
 struct URI{
 	char *host;
 	char *scheme;
@@ -28,9 +28,9 @@ struct Request_header{
 	char *authorization;
 	char *accpet_language;
 	char *accpet_range;
-	char *cache-control;
+	char *cache_control;
 	char *connection;
-	char *content-length;
+	int  content-length;
 	char *content-type;
 	char *date;
 	char *if_match;
@@ -57,7 +57,6 @@ struct Request_body{
 	bool is_finish;
 };
 struct Request{
-	char *body;
 	Request_line *req_line;
 	Request_header *req_header;
 	Request_body *req_body;
@@ -66,10 +65,58 @@ struct Request{
 };
 void request_init(Request *r){
 	
-}
+};
 void request_clear(Request *r){
 	
-}
+};
+struct Responses_line{
+	Http_version　version;
+	int status_code;
+	char *status;
+	bool is_finish;
+};
+struct Responses_header{
+	char *accpet_range;
+	char *age;
+	char *allow;
+	char *cache_control;
+	char *content_encoding;
+	char *content_language;
+	int content_length;
+	char *content_location;
+	char *content_md5;
+	char *content_range;
+	char *content_type;
+	char *date;
+	char *etag;
+	char *expires;
+	char *last_modified;
+	char *location;
+	char *pragma;
+	char *proxy_authorization;
+	char *refresh;
+	int retry_after;
+	char *server;
+	char *set_cookie;
+	char *trailer;
+	char *transfer_encoding;
+	char *vary;
+	char *via;
+	char *warning;
+	char *www_authenticate;
+	bool is_finish;
+};
+struct Responses_body{
+	char *context;
+	bool is_finish;
+};
+struct Responses{
+	Responses_line *res_line;
+	Responses_header *res_header;
+	Responses_body *res_body;
+	bool is_finish;
+};
+/*
 class Http_parser{
 	public:
 		Http_parser(char *req_context,Request *req = NULL);
@@ -79,7 +126,7 @@ class Http_parser{
 	private:
 		char *req_context;
 		Request *req;
-};
+};*/
 
 
 #endif

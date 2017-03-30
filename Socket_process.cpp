@@ -24,6 +24,7 @@ Socket_process::conn_unfinish = new Connections_unfinish();
 Socket_process::read_from_socket(){
 	while(true){
 		int res = recv(_conn,t_buffer,READ_BUF_SIZE,0);
+		read_size += res;
 		if(res == 0){
 			close(_conn);
 			break;
@@ -34,13 +35,11 @@ Socket_process::read_from_socket(){
 			}
 		}
 		else{
-			char *tt = new char[read_size+READ_BUF_SIZE];
-			strncpy(tt,read_buffer,read_size);
-			strncpy(tt+read_size,t_buffer,READ_BUF_SIZE);
+			char *tt = new char[read_size];
+			strncpy(tt,read_buffer,read_size-res);
+			strncpy(tt+(read_size-res),t_buffer,res);
 			delete[] read_buffer;
 			read_buffer = tt;
-			if(res<READ_BUF_SIZE)
-				break;
 		}
 		
 	}
