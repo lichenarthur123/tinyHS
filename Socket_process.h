@@ -12,7 +12,7 @@
 
 #define READ_BUF_SIZE 2048
 #define WRITE_BUF_SIZE 2048
-class Socket_process
+/*class Socket_process
 {
  public:
   Socket_process(int epollfd,int conn);
@@ -31,5 +31,7 @@ class Socket_process
   char *write_buffer;
   http_request request;
 };
+*/
+char* read_from_socket(int conn,int &size);
 
 #endif // SOCKET_PROCESS_H

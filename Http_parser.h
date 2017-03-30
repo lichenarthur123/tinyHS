@@ -57,6 +57,8 @@ struct Request_body{
 	bool is_finish;
 };
 struct Request{
+	char *content;
+	int content_size;
 	Request_line *req_line;
 	Request_header *req_header;
 	Request_body *req_body;
@@ -111,6 +113,8 @@ struct Responses_body{
 	bool is_finish;
 };
 struct Responses{
+	char *content;
+	int content_size;
 	Responses_line *res_line;
 	Responses_header *res_header;
 	Responses_body *res_body;

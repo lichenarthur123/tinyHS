@@ -42,7 +42,11 @@ void HttpServer::run()
 
     while(true){
         int ready_num = epoll_wait(epollfd, ev, MAX_EVENTS, -1);
-				std::cout<<ready_num<<std::endl;
+		if(ready_num<0){
+			std::cout<<"epoll wait error"<<endl;
+			break;
+		}
+		std::cout<<ready_num<<std::endl;
         for(int i = 0; i < ready_num; i++){
             int fd = ev[i].data.fd;
             if(sock == fd){
@@ -53,11 +57,22 @@ void HttpServer::run()
 
                 add_event(epollfd,conn,true);
             }
-            else if(fd & EPOLLIN){
-							  std::cout<<"in"<<std::endl;
-                _pool->add(new Socket_process(epollfd,fd));
+            else if(ev[i].events & EPOLLIN){
+				std::cout<<"in"<<std::endl;
+				char *read;
+				int read_size;
+				read = read_from_socket(fd,read_size);
+				if(read_size==0 && read == NULL){
+					std::cout<<"read from socket failed"<<endl;
+					continue;
+				}
+				if(_pool->add(fd,read,read_size,0)!=true){
+					//queue full
+					delete[] read;
+				}
+                //_pool->add(new Socket_process(epollfd,fd));
             }
-            //else if(fd & EPOLLOUT){
+            //else if(ev[i].events & EPOLLOUT){
             //    _pool->add(new Http_request(epollfd,sock));
             //}
             else{

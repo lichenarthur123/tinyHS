@@ -19,16 +19,50 @@ ThreadsPool::ThreadsPool(int thread_num,int request_max):_thread_num(thread_num)
 
 ThreadsPool::~ThreadsPool(){
     threads.clear();
+	while(!conn_pool.empty()){
+		conn_pool.pop();
+	}
+	req_pool.clear();
+	res_pool.clear();
     is_work = false;
 }
 
-bool ThreadsPool::add(Socket_process *request){
+bool ThreadsPool::add(int conn,char *read_buff,int buff_size,int req_or_res){
     locker.lock();
     if(r_queue.size() >= _request_max){
         locker.unlock();
         return false;
     }
-    r_queue.push(request);
+	if(req_or_res == 0){//request
+		connection con;
+		con.conn = conn;
+		con.request_or_response = 0;
+		conn_pool.push(con);
+		
+		//add to request pool
+		std::map<int,Request*>::iterator it;
+		it = rep_pool.find(conn);
+		if(it != rep_pool.end()){//found
+			int old_size = rep_pool[conn]->content_size;
+			char *old_buff = rep_pool[conn]->content;
+			char *new_buff = new char[old_size+buff_size];
+			strncpy(new_buff,old_buff,old_size);
+			strncpy(new_buff+old_buff,read_buff,buff_size);
+			delete[] old_buff;
+			rep_pool[conn]->content = new_buff;
+			req_pool[conn]->content_size = old_size+buff_size;
+			return true;
+		}
+		else{
+			Request *r;
+			request_init(r);
+			r->content_size = buff_size;
+			r->content = read_buff;
+			req_pool.insert(make_pair<int,Request*>(conn,r));
+			return true;
+		}
+		
+	}
     locker.unlock();
     status_queue.post();
     return true;

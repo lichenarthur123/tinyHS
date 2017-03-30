@@ -11,6 +11,7 @@
 #include<sys/types.h>
 #include<string.h>
 #include<fcntl.h>
+#include<errno.h>
 
 #define MAX_EVENTS 100000
 class HttpServer
