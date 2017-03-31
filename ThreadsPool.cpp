@@ -59,7 +59,7 @@ bool ThreadsPool::add(int conn,char *read_buff,int buff_size,int req_or_res){
 			Request *r;
 			std::cout<<"insert"<<std::endl;
 			request_init(r);
-			std::cout<<"insert"<<std::endl;
+			std::cout<<r->content_size<<std::endl;
 			r->content_size = buff_size;
 			std::cout<<"insert"<<std::endl;
 			r->content = read_buff;
