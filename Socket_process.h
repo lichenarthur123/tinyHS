@@ -3,6 +3,7 @@
 #include<string.h>
 #include<algorithm>
 #include<sys/socket.h>
+#include<unistd.h>
 #include<sys/epoll.h>
 #include<fcntl.h>
 #include<errno.h>

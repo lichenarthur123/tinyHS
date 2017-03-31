@@ -43,7 +43,7 @@ void HttpServer::run()
     while(true){
         int ready_num = epoll_wait(epollfd, ev, MAX_EVENTS, -1);
 		if(ready_num<0){
-			std::cout<<"epoll wait error"<<endl;
+			std::cout<<"epoll wait error"<<std：：endl;
 			break;
 		}
 		std::cout<<ready_num<<std::endl;
@@ -63,10 +63,10 @@ void HttpServer::run()
 				int read_size;
 				read = read_from_socket(fd,read_size);
 				if(read_size==0 && read == NULL){
-					std::cout<<"read from socket failed"<<endl;
+					std::cout<<"read from socket failed"<<std::endl;
 					continue;
 				}
-				std::cout<<"in"<<endl;
+				std::cout<<"in"<<std::endl;
 				if(_pool->add(fd,read,read_size,0)!=true){
 					//queue full
 					delete[] read;

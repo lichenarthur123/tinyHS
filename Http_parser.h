@@ -67,13 +67,13 @@ struct Request{
 };
 void request_init(Request *r);
 void request_clear(Request *r);
-struct Responses_line{
+struct Response_line{
 	Http_version version;
 	int status_code;
 	char *status;
 	bool is_finish;
 };
-struct Responses_header{
+struct Response_header{
 	char *accpet_range;
 	char *age;
 	char *allow;
@@ -104,20 +104,20 @@ struct Responses_header{
 	char *www_authenticate;
 	bool is_finish;
 };
-struct Responses_body{
+struct Response_body{
 	char *context;
 	bool is_finish;
 };
-struct Responses{
+struct Response{
 	char *content;
 	int content_size;
-	Responses_line *res_line;
-	Responses_header *res_header;
-	Responses_body *res_body;
+	Response_line *res_line;
+	Response_header *res_header;
+	Response_body *res_body;
 	bool is_finish;
 };
-void Responses_init(Responses *r);
-void Responses_clear(Responses *r);
+void Response_init(Response *r);
+void Response_clear(Response *r);
 
 
 #endif

@@ -67,7 +67,7 @@ char* read_from_socket(int conn,int &size){
 		else{
 			char *tt = new char[read_size];
 			strncpy(tt,read_buffer,read_size-ret);
-			strncpy(tt+(read_size-res),t_buffer,ret);
+			strncpy(tt+(read_size-ret),t_buffer,ret);
 			delete[] read_buffer;
 			read_buffer = tt;
 		}

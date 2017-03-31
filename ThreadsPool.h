@@ -15,7 +15,7 @@
 struct connection{
 	int conn;
 	int request_or_response;//0:req,1:res
-}
+};
 class ThreadsPool
 {
     private:
