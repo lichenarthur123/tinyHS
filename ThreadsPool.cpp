@@ -42,7 +42,7 @@ bool ThreadsPool::add(int conn,char *read_buff,int buff_size,int req_or_res){
 		//add to request pool
 		std::map<int,Request*>::iterator it;
 		it = req_pool.find(conn);
-		if(it != rep_pool.end()){//found
+		if(it != req_pool.end()){//found
 			int old_size = rep_pool[conn]->content_size;
 			char *old_buff = rep_pool[conn]->content;
 			char *new_buff = new char[old_size+buff_size];
