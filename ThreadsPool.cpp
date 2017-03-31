@@ -87,7 +87,7 @@ void ThreadsPool::run(){
 		if(c.request_or_response == 0){//request
 			std::map<int,Request*>::iterator it;
 			it = req_pool.find(c.conn);
-			if(it!=rep_pool.end()){//found
+			if(it!=req_pool.end()){//found
 				Request *req = it->second;
 				//parser request
 			}
@@ -100,10 +100,10 @@ void ThreadsPool::run(){
 		
 		
         locker.unlock();
-        if(r){
-            std::cout<<"ok"<<std::endl;
+        //if(c){
+        //    std::cout<<"ok"<<std::endl;
             //r->process();
-        }
+        //}
     }
 }
 
