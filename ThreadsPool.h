@@ -22,7 +22,7 @@ class ThreadsPool
         int _thread_num;
         int _conn_max;
         std::vector<pthread_t> threads;
-        std::queue<conncetion> conn_pool;
+        std::queue<connection> conn_pool;
 		std::map<int,Request*> req_pool;
 		std::map<int,Response*> res_pool;
         Lock locker;
