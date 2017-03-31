@@ -30,14 +30,14 @@ struct Request_header{
 	char *accpet_range;
 	char *cache_control;
 	char *connection;
-	int  content-length;
-	char *content-type;
+	int  content_length;
+	char *content_type;
 	char *date;
 	char *if_match;
 	char *if_modified_since;
 	char *if_none_match;
 	char *if_range;
-	char *if_unmodified-since;
+	char *if_unmodified_since;
 	char *max_forward;
 	char *pragma;
 	char *proxy_authorization;
