@@ -68,7 +68,7 @@ struct Request{
 void request_init(Request *r);
 void request_clear(Request *r);
 struct Responses_line{
-	Http_version　version;
+	Http_version version;
 	int status_code;
 	char *status;
 	bool is_finish;
