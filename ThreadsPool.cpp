@@ -55,15 +55,10 @@ bool ThreadsPool::add(int conn,char *read_buff,int buff_size,int req_or_res){
 			return true;
 		}
 		else{
-			std::cout<<"insert"<<std::endl;
 			Request *r;
-			std::cout<<"insert"<<std::endl;
 			request_init(r);
-			std::cout<<buff_size<<std::endl;
 			r->content_size = buff_size;
-			std::cout<<"insert"<<std::endl;
 			r->content = read_buff;
-			std::cout<<"insert null"<<std::endl;
 			req_pool.insert(std::make_pair<int,Request*>(conn,r));
 			std::cout<<"insert null"<<std::endl;
 			return true;
