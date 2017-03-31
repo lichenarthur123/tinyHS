@@ -71,6 +71,7 @@ void HttpServer::run()
 					//queue full
 					delete[] read;
 				}
+				std::cout<<"in_finish"<<std::endl;
             }
             //else if(ev[i].events & EPOLLOUT){
             //    _pool->add(new Http_request(epollfd,sock));
