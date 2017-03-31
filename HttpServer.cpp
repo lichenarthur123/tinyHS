@@ -43,7 +43,7 @@ void HttpServer::run()
     while(true){
         int ready_num = epoll_wait(epollfd, ev, MAX_EVENTS, -1);
 		if(ready_num<0){
-			std::cout<<"epoll wait error"<<std：：endl;
+			std::cout<<"epoll wait error"<<std::endl;
 			break;
 		}
 		std::cout<<ready_num<<std::endl;
