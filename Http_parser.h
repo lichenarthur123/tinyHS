@@ -65,12 +65,8 @@ struct Request{
 	bool is_finish;
 	
 };
-void request_init(Request *r){
-	
-};
-void request_clear(Request *r){
-	
-};
+void request_init(Request *r);
+void request_clear(Request *r);
 struct Responses_line{
 	Http_version　version;
 	int status_code;
@@ -120,17 +116,8 @@ struct Responses{
 	Responses_body *res_body;
 	bool is_finish;
 };
-/*
-class Http_parser{
-	public:
-		Http_parser(char *req_context,Request *req = NULL);
-		~Http_parser();
-		bool is_complete;
-		Parser_status parser();
-	private:
-		char *req_context;
-		Request *req;
-};*/
+void Responses_init(Responses *r);
+void Responses_clear(Responses *r);
 
 
 #endif

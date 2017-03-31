@@ -20,7 +20,7 @@ class ThreadsPool
 {
     private:
         int _thread_num;
-        int _request_max;
+        int _conn_max;
         std::vector<pthread_t> threads;
         std::queue<conncetion> conn_pool;
 		std::map<int,Request*> req_pool;

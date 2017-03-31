@@ -66,11 +66,11 @@ void HttpServer::run()
 					std::cout<<"read from socket failed"<<endl;
 					continue;
 				}
+				std::cout<<"in"<<endl;
 				if(_pool->add(fd,read,read_size,0)!=true){
 					//queue full
 					delete[] read;
 				}
-                //_pool->add(new Socket_process(epollfd,fd));
             }
             //else if(ev[i].events & EPOLLOUT){
             //    _pool->add(new Http_request(epollfd,sock));

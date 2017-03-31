@@ -1,10 +1,6 @@
 #include "Http_parser.h"
 
-Http_parser::Http_parser(char *req_context,Request *req){
-	this->req_context = req_context;
-	if(req!=NULL)
-		this->req = req;
-	else
-		this->req = new Request;
-	this->is_complete = false;
-}
+void request_init(Request *r){};
+void request_clear(Request *r){};
+void Responses_init(Responses *r){};
+void Responses_clear(Responses *r){};

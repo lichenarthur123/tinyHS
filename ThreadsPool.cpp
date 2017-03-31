@@ -1,6 +1,6 @@
 #include "ThreadsPool.h"
 
-ThreadsPool::ThreadsPool(int thread_num,int request_max):_thread_num(thread_num),_request_max(request_max),is_work(true){
+ThreadsPool::ThreadsPool(int thread_num,int request_max):_thread_num(thread_num),_conn_max(request_max),is_work(true){
     threads.clear();
     threads.resize(_thread_num);
     for(int i=0; i< _thread_num; i++){
@@ -29,7 +29,7 @@ ThreadsPool::~ThreadsPool(){
 
 bool ThreadsPool::add(int conn,char *read_buff,int buff_size,int req_or_res){
     locker.lock();
-    if(r_queue.size() >= _request_max){
+    if(conn_pool.size() >= _conn_max){
         locker.unlock();
         return false;
     }
@@ -78,12 +78,27 @@ void ThreadsPool::run(){
     while(is_work){
         status_queue.wait();
         locker.lock();
-        if(r_queue.empty()){
+        if(conn_pool.empty()){
             locker.unlock();
             continue;
         }
-        Socket_process *r = r_queue.front();
-        r_queue.pop();
+		connection c = conn_pool.front();
+		conn_pool.pop();
+		if(c.request_or_response == 0){//request
+			std::map<int,Request*>::iterator it;
+			it = req_pool.find(c.conn);
+			if(it!=rep_pool.end()){//found
+				Request *req = it->second;
+				//parser request
+			}
+			else{
+				continue;
+			}
+		}
+		
+		
+		
+		
         locker.unlock();
         if(r){
             std::cout<<"ok"<<std::endl;
