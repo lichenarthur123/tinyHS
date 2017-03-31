@@ -69,7 +69,7 @@ void HttpServer::run()
 				std::cout<<"in"<<std::endl;
 				if(_pool->add(fd,read,read_size,0)!=true){
 					//queue full
-					delete[] read;
+					//delete[] read;
 				}
 				std::cout<<"in_finish"<<std::endl;
             }
