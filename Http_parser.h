@@ -16,7 +16,7 @@ struct URI{
 struct Request_line{
 	char *context;
 	Req_method method;
-	URI url;
+	URI *url;
 	Http_version version;
 	bool is_finish;
 };
@@ -65,8 +65,14 @@ struct Request{
 	bool is_finish;
 	
 };
-void request_init(Request *r);
-void request_clear(Request *r);
+void request_init(Request **r);
+void request_line_init(Request_line **rl);
+void request_header_init(Request_header **rh);
+void request_body_init(Request_body **rb);
+void request_line_clear(Request_line **rl);
+void request_header_clear(Request_header **rh);
+void request_body_clear(Request_body **rb);
+void request_clear(Request **r);
 struct Response_line{
 	Http_version version;
 	int status_code;
@@ -116,8 +122,14 @@ struct Response{
 	Response_body *res_body;
 	bool is_finish;
 };
-void Response_init(Response *r);
-void Response_clear(Response *r);
+void Response_init(Response **r);
+void Response_line_init(Request_line **rl){};
+void Response_header_init(Request_header **rh);
+void Response_body_init(Request_body **rb);
+void Response_line_clear(Request_line **rl);
+void Response_header_clear(Request_header **rh);
+void Response_body_clear(Request_body **rb);
+void Response_clear(Response **r);
 
 
 #endif
