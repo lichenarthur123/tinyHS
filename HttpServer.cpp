@@ -72,10 +72,13 @@ void HttpServer::run()
 					delete[] read;
 				}
 				std::cout<<"in_finish"<<std::endl;
+				ev[i].events = EPOLLOUT|EPOLLET;
+				epoll_ctl(epollfd,EPOLL_CTL_MOD,fd,&ev[i]);
             }
-            //else if(ev[i].events & EPOLLOUT){
+            else if(ev[i].events & EPOLLOUT){
+		std::cout<<"hello out"<<std::endl;
             //    _pool->add(new Http_request(epollfd,sock));
-            //}
+            }
             else{
                 close(fd);
             }
