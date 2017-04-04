@@ -123,7 +123,7 @@ struct Response{
 	bool is_finish;
 };
 void Response_init(Response **r);
-void Response_line_init(Request_line **rl){};
+void Response_line_init(Request_line **rl);
 void Response_header_init(Request_header **rh);
 void Response_body_init(Request_body **rb);
 void Response_line_clear(Request_line **rl);

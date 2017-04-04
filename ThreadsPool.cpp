@@ -15,6 +15,7 @@ ThreadsPool::ThreadsPool(int thread_num,int request_max):_thread_num(thread_num)
         }
     }
     std::cout<<"threads create complete."<<std::endl;
+    std::cout<<"is_work is true"<<std::endl;
 }
 
 ThreadsPool::~ThreadsPool(){
@@ -52,22 +53,25 @@ bool ThreadsPool::add(int conn,char *read_buff,int buff_size,int req_or_res){
 			delete[] old_buff;
 			req_pool[conn]->content = new_buff;
 			req_pool[conn]->content_size = old_size+buff_size;
-			return true;
+			//return true;
 		}
 		else{
 			Request *r;
-			request_init(r);
+			request_init(&r);
 			std::cout<<"insert null"<<std::endl;
 			r->content_size = buff_size;
 			std::cout<<"insert null"<<std::endl;
 			r->content = read_buff;
 			req_pool.insert(std::make_pair<int,Request*>(conn,r));
+			std::cout<<req_pool.size()<<std::endl;
+			
 			std::cout<<"insert null"<<std::endl;
-			return true;
+			//return true;
 		}
 		
 	}
     locker.unlock();
+    std::cout<<conn_pool.size()<<std::endl;
     status_queue.post();
     return true;
 }
@@ -80,25 +84,29 @@ void* ThreadsPool::worker(void* arg){
 
 void ThreadsPool::run(){
     while(is_work){
+	//std::cout<<"1"<<std::endl;
         status_queue.wait();
         locker.lock();
         if(conn_pool.empty()){
             locker.unlock();
             continue;
         }
-		connection c = conn_pool.front();
-		conn_pool.pop();
-		if(c.request_or_response == 0){//request
-			std::map<int,Request*>::iterator it;
-			it = req_pool.find(c.conn);
-			if(it!=req_pool.end()){//found
-				Request *req = it->second;
-				//parser request
-			}
-			else{
-				continue;
-			}
+	std::cout<<conn_pool.size()<<std::endl;
+	connection c = conn_pool.front();
+	conn_pool.pop();
+	if(c.request_or_response == 0){//request
+		std::map<int,Request*>::iterator it;
+		it = req_pool.find(c.conn);
+		std::cout<<req_pool.size()<<std::endl;
+		if(it!=req_pool.end()){//found
+			Request *req = it->second;
+			std::cout<<"parsering"<<std::endl;
+			//parser request
 		}
+		else{
+			continue;
+		}
+	}
 		
 		
 		
