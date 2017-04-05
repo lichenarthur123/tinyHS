@@ -62,6 +62,34 @@ int get_req_line_end(char *msg_header,int size){
 	else
 		return s_end;
 };
+bool parser_url(Request *r,char *url,int size){
+	int quote = 0;
+	int sharp = 0;
+	for(int i = 0; i<size; i++){
+		if(url[i] == '?')
+			quote = i;
+		if(url[i] == '#')
+			sharp = i;
+	}
+	std::cout<<quote<<" "<<sharp<<std::endl;
+	if(quote == 0)
+		quote = size;
+	if(sharp == 0)
+		sharp = size;
+	if(quote > 0){
+		r->req_line->url->abs_path = new char[quote];
+		strncpy(r->req_line->url->abs_path,url,quote);
+	}
+	if(quote<size){
+		r->req_line->url->query = new char[sharp-quote-1];
+		strncpy(r->req_line->url->query,url+quote+1,sharp-quote-1);
+	}
+	if(sharp<size){
+		r->req_line->url->fragment = new char[size-sharp-1];
+		strncpy(r->req_line->url->fragment,url+sharp+1,size-sharp-1);
+	}
+	return true;
+};
 bool parser_req_line(Request *r,int req_line_end){
 	int first_b=0;
 	int second_b=0;
@@ -85,6 +113,7 @@ bool parser_req_line(Request *r,int req_line_end){
 	else{
 		//501
 		delete[] method;
+		method = NULL;
 		return false;
 	}
 	delete[] method;
@@ -103,8 +132,19 @@ bool parser_req_line(Request *r,int req_line_end){
 		r->req_line->version = HTTP09;
 	delete[] version;
 	version = NULL;
+	char *url = new char[second_b-first_b-1];
+	strncpy(url,r->req_line->content+first_b+1,second_b-first_b-1);
+	if(!parser_url(r,url,second_b-first_b-1)){
+		//
+		delete[] url;
+		url = NULL;
+		return false;
+	}
+	delete[] url;
+	url = NULL;
+	return true;
 
-}
+};
 void http_parser(Request *r){
 	//std::cout<<r->content<<std::endl;
 	//char *p = r->content;
