@@ -14,14 +14,14 @@ struct URI{
 	char *query;
 };
 struct Request_line{
-	char *context;
+	char *content;
 	Req_method method;
 	URI *url;
 	Http_version version;
 	bool is_finish;
 };
 struct Request_header{
-	char *context;
+	char *content;
 	char *accpet;
 	char *accpet_charset;
 	char *accpet_encoding;
@@ -53,7 +53,7 @@ struct Request_header{
 	bool is_finish;
 };
 struct Request_body{
-	char *context;
+	char *content;
 	bool is_finish;
 };
 struct Request{
@@ -111,7 +111,7 @@ struct Response_header{
 	bool is_finish;
 };
 struct Response_body{
-	char *context;
+	char *content;
 	bool is_finish;
 };
 struct Response{
@@ -131,5 +131,8 @@ void Response_header_clear(Request_header **rh);
 void Response_body_clear(Request_body **rb);
 void Response_clear(Response **r);
 
-
+int msg_header_iscomplete(char *content,int size);
+int get_req_line_end(char *msg_header,int size);
+bool parser_req_line(Request *r,int req_line_end);
+void http_parser(Request *r);
 #endif

@@ -15,6 +15,7 @@
 struct connection{
 	int conn;
 	int request_or_response;//0:req,1:res
+	int epollfd;
 };
 class ThreadsPool
 {
@@ -35,7 +36,7 @@ class ThreadsPool
     public:
         ThreadsPool(int thread_num = 20,int request_max = MAX_REQUEST);
         virtual ~ThreadsPool();
-        bool add(int conn,char *buff,int buff_size,int req_or_res);
+        bool add(int epollfd,int conn,char *buff,int buff_size,int req_or_res);
     protected:
 };
 

@@ -36,3 +36,99 @@ void Response_body_clear(Request_body **rb){};
 void Response_clear(Response **r){
 	*r = NULL;
 };
+
+int msg_header_iscomplete(char *content,int size){
+	int s_end = 0;
+	for(int i = 0; i<=size-4;i++){
+		if(content[i]=='\r' && content[i+1]=='\n' && content[i+2]=='\r' && content[i+3]=='\n')
+			s_end = i-1;
+	}
+	if(s_end == 0)
+		return -1;
+	else
+		return s_end;
+};
+
+int get_req_line_end(char *msg_header,int size){
+	int s_end = 0;
+	for(int i = 0; i <= size-2; i++){
+		if(msg_header[i]=='\r' && msg_header[i+1] =='\n'){
+			s_end = i-1;
+			break;
+		}
+	}
+	if(s_end == 0)
+		return -1;
+	else
+		return s_end;
+};
+bool parser_req_line(Request *r,int req_line_end){
+	int first_b=0;
+	int second_b=0;
+	for(int i=0; i<=req_line_end; i++){
+		if(r->req_line->content[i]==' '){
+			if(first_b!=0)
+				second_b = i;
+			else
+				first_b = i;
+			if(first_b!=0 && second_b!=0)break;
+		}
+	}
+	if(first_b==0 || second_b==0)
+		return false;
+	char *method = new char[first_b+1];
+	strncpy(method,r->req_line->content,first_b+1);
+	if(strstr(method,"GET"))
+		r->req_line->method = GET;
+	else if(strstr(method,"POST"))
+		r->req_line->method = POST;
+	else{
+		//501
+		delete[] method;
+		return false;
+	}
+	delete[] method;
+	method = NULL;
+	char *version = new char[req_line_end-second_b];
+	strncpy(version,r->req_line->content+second_b+1,req_line_end-second_b);
+	if(strstr(version,"HTTP/0.9"))
+		r->req_line->version = HTTP09;
+	else if(strstr(version,"HTTP/1.0"))
+		r->req_line->version = HTTP10;
+	else if(strstr(version,"HTTP/1.1"))
+		r->req_line->version = HTTP11;
+	else if(strstr(version,"HTTP/2.0"))
+		r->req_line->version = HTTP20;
+	else
+		r->req_line->version = HTTP09;
+	delete[] version;
+	version = NULL;
+
+}
+void http_parser(Request *r){
+	//std::cout<<r->content<<std::endl;
+	//char *p = r->content;
+	std::cout<<msg_header_iscomplete(r->content,r->content_size)<<std::endl;
+	//int header_end = 0;
+	int msg_end = msg_header_iscomplete(r->content,r->content_size);
+	if(msg_end == -1){//header is incomplete.
+		return;
+	}
+	int http_req_line_end = get_req_line_end(r->content,msg_end+1);
+	if(http_req_line_end == -1){//did not found request line.
+		//500
+		return;
+	}
+	//std::cout<<http_req_line_end<<std::endl;
+	//std::cout<<r->content[18]<<std::endl;
+	//std::cout<<r->content[21]<<std::endl;
+	//if(r->content[19]=='\r')std::cout<<"y"<<std::endl;
+	//if(r->content[20]=='\n')std::cout<<"y"<<std::endl;
+	r->req_line->content = new char[http_req_line_end+3];
+	strncpy(r->req_line->content,r->content,http_req_line_end+3);
+	if(!parser_req_line(r,http_req_line_end)){
+		//500
+		return;
+	}
+	
+};

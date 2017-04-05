@@ -58,26 +58,28 @@ void HttpServer::run()
                 add_event(epollfd,conn,true);
             }
             else if(ev[i].events & EPOLLIN){
-				std::cout<<"in"<<std::endl;
-				char *read;
-				int read_size;
-				read = read_from_socket(fd,read_size);
-				if(read_size==0 && read == NULL){
-					std::cout<<"read from socket failed"<<std::endl;
-					continue;
-				}
-				std::cout<<"in"<<std::endl;
-				if(_pool->add(fd,read,read_size,0)!=true){
-					//queue full
-					delete[] read;
-				}
-				std::cout<<"in_finish"<<std::endl;
-				ev[i].events = EPOLLOUT|EPOLLET;
-				epoll_ctl(epollfd,EPOLL_CTL_MOD,fd,&ev[i]);
-            }
+							std::cout<<"in"<<std::endl;
+							char *read;
+							int read_size;
+							read = read_from_socket(fd,read_size);
+							std::cout<<read_size<<std::endl;
+							if(read_size>0)std::cout<<read<<std::endl;
+							if(read_size==0 && read == NULL){
+							std::cout<<"read from socket failed"<<std::endl;
+								continue;
+							}
+							std::cout<<"in"<<std::endl;
+							if(_pool->add(epollfd,fd,read,read_size,0)!=true){
+								//queue full
+								delete[] read;
+							}
+							std::cout<<"in_finish"<<std::endl;
+							ev[i].events = EPOLLOUT|EPOLLET;
+							epoll_ctl(epollfd,EPOLL_CTL_MOD,fd,&ev[i]);
+						}
             else if(ev[i].events & EPOLLOUT){
-		std::cout<<"hello out"<<std::endl;
-            //    _pool->add(new Http_request(epollfd,sock));
+							std::cout<<"hello out"<<std::endl;
+							//    _pool->add(new Http_request(epollfd,sock));
             }
             else{
                 close(fd);

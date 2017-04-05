@@ -28,7 +28,7 @@ ThreadsPool::~ThreadsPool(){
     is_work = false;
 }
 
-bool ThreadsPool::add(int conn,char *read_buff,int buff_size,int req_or_res){
+bool ThreadsPool::add(int epollfd,int conn,char *read_buff,int buff_size,int req_or_res){
     locker.lock();
     if(conn_pool.size() >= _conn_max){
         locker.unlock();
@@ -38,6 +38,7 @@ bool ThreadsPool::add(int conn,char *read_buff,int buff_size,int req_or_res){
 		connection con;
 		con.conn = conn;
 		con.request_or_response = 0;
+		con.epollfd = epollfd;
 		conn_pool.push(con);
 		
 		//add to request pool
@@ -91,22 +92,27 @@ void ThreadsPool::run(){
             locker.unlock();
             continue;
         }
-	std::cout<<conn_pool.size()<<std::endl;
-	connection c = conn_pool.front();
-	conn_pool.pop();
-	if(c.request_or_response == 0){//request
-		std::map<int,Request*>::iterator it;
-		it = req_pool.find(c.conn);
-		std::cout<<req_pool.size()<<std::endl;
-		if(it!=req_pool.end()){//found
-			Request *req = it->second;
-			std::cout<<"parsering"<<std::endl;
-			//parser request
-		}
-		else{
-			continue;
-		}
-	}
+				std::cout<<conn_pool.size()<<std::endl;
+				connection c = conn_pool.front();
+				conn_pool.pop();
+				if(c.request_or_response == 0){//request
+					std::map<int,Request*>::iterator it;
+					it = req_pool.find(c.conn);
+					std::cout<<req_pool.size()<<std::endl;
+					if(it!=req_pool.end()){//found
+						Request *req = it->second;
+						std::cout<<"parsering"<<std::endl;
+						//parser request
+						http_parser(req);
+						std::cout<<req->req_line->content<<std::endl;
+						std::cout<<req->req_line->method<<std::endl;
+						std::cout<<req->req_line->version<<std::endl;
+
+					}
+					else{
+						continue;
+					}
+				}
 		
 		
 		
@@ -116,6 +122,6 @@ void ThreadsPool::run(){
         //    std::cout<<"ok"<<std::endl;
             //r->process();
         //}
-    }
+				}
 }
 

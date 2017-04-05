@@ -51,7 +51,9 @@ char* read_from_socket(int conn,int &size){
 	bool flag = true;
 	while(true){
 		int ret = recv(conn,t_buffer,READ_BUF_SIZE,0);
-		read_size += ret;
+		std::cout<<ret<<std::endl;
+		if(ret>0)
+			read_size += ret;
 		if(ret == 0){
 			close(conn);
 			flag = false;

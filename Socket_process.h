@@ -1,5 +1,6 @@
 #ifndef SOCKET_PROCESS_H
 #define SOCKET_PROCESS_H
+#include<iostream>
 #include<string.h>
 #include<algorithm>
 #include<sys/socket.h>
