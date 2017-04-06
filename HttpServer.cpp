@@ -74,7 +74,7 @@ void HttpServer::run()
 		    delete[] read;
 	        }
 	        std::cout<<"in_finish"<<std::endl;
-	        ev[i].events = EPOLLOUT|EPOLLET;
+	        ev[i].events = EPOLLIN|EPOLLET;
 	        epoll_ctl(epollfd,EPOLL_CTL_MOD,fd,&ev[i]);
             }
             else if(ev[i].events & EPOLLOUT){

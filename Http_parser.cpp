@@ -71,22 +71,26 @@ bool parser_url(Request *r,char *url,int size){
 		if(url[i] == '#')
 			sharp = i;
 	}
-	std::cout<<quote<<" "<<sharp<<std::endl;
+	std::cout<<quote<<" "<<sharp<<" "<<size<<std::endl;
 	if(quote == 0)
 		quote = size;
 	if(sharp == 0)
 		sharp = size;
 	if(quote > 0){
-		r->req_line->url->abs_path = new char[quote];
+		r->req_line->url->abs_path = new char[quote+1];
 		strncpy(r->req_line->url->abs_path,url,quote);
+		r->req_line->url->abs_path[quote]='\0';
 	}
 	if(quote<size){
-		r->req_line->url->query = new char[sharp-quote-1];
-		strncpy(r->req_line->url->query,url+quote+1,sharp-quote-1);
+		r->req_line->url->query = new char[sharp-quote];
+		strncpy(r->req_line->url->query,url+quote+1,sharp-quote);
+		r->req_line->url->query[sharp-quote]='\0';
+
 	}
 	if(sharp<size){
-		r->req_line->url->fragment = new char[size-sharp-1];
-		strncpy(r->req_line->url->fragment,url+sharp+1,size-sharp-1);
+		r->req_line->url->fragment = new char[size-sharp];
+		strncpy(r->req_line->url->fragment,url+sharp+1,size-sharp);
+		r->req_line->url->fragment[size-sharp]='\0';
 	}
 	return true;
 };
@@ -102,6 +106,7 @@ bool parser_req_line(Request *r,int req_line_end){
 			if(first_b!=0 && second_b!=0)break;
 		}
 	}
+	std::cout<<first_b<<" "<<second_b<<std::endl;
 	if(first_b==0 || second_b==0)
 		return false;
 	char *method = new char[first_b+1];
@@ -145,6 +150,7 @@ bool parser_req_line(Request *r,int req_line_end){
 	return true;
 
 };
+//bool parser_header()
 void http_parser(Request *r){
 	//std::cout<<r->content<<std::endl;
 	//char *p = r->content;
@@ -165,10 +171,14 @@ void http_parser(Request *r){
 	//if(r->content[19]=='\r')std::cout<<"y"<<std::endl;
 	//if(r->content[20]=='\n')std::cout<<"y"<<std::endl;
 	r->req_line->content = new char[http_req_line_end+3];
+	std::cout<<http_req_line_end<<std::endl;
 	strncpy(r->req_line->content,r->content,http_req_line_end+3);
 	if(!parser_req_line(r,http_req_line_end)){
 		//500
 		return;
 	}
+	std::cout<<r->content+http_req_line_end+3<<std::endl;
+	r->req_header->content = new char[msg_end - http_req_line_end];
+	strncpy(r->req_header->content,r->content+http_req_line_end+3,msg_end - http_req_line_end);
 	
 };
