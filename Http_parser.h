@@ -2,6 +2,7 @@
 #define HTTP_PARSER_H
 #include<iostream>
 #include<string.h>
+#include<stdlib.h>
 enum Req_method{GET,POST};
 enum Http_version{HTTP09,HTTP10,HTTP11,HTTP20};
 //enum Parser_status{COMPLETE,MORE_DATA};
@@ -29,7 +30,7 @@ struct Request_header{
 	char *accpet_language;
 	char *accpet_range;
 	char *cache_control;
-	char *connection;
+	int  connection;
 	int  content_length;
 	char *content_type;
 	char *date;

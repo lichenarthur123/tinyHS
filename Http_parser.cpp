@@ -154,11 +154,47 @@ void parser_req_header_line(Request *r,char *line,int line_size){
 	char *ox = new char[line_size+1];
 	strncpy(ox,line,line_size);
 	ox[line_size]='\0';
+	//std::cout<<line_size<<std::endl;
+	if(strstr(ox,"Connection")){
+		if(strstr(ox,"close")){
+			r->req_header->connection = 0;
+		}else{
+			r->req_header->connection = 1;
+		}
+	}
+	if(strstr(ox,"Content-Length")){
+		int p_idx = 14;
+		int sta = 0,endd = line_size;
+		//std::cout<<"  xxx  "<<std::endl;
+		while(p_idx<line_size){
+			//std::cout<<(int)ox[p_idx]<<std::endl;
+			if((int)ox[p_idx]>='0'&&(int)ox[p_idx]<='9'&&sta==0){
+				sta = p_idx;
+				std::cout<<ox[p_idx]<<std::endl;
+			}
+			if(((int)ox[p_idx]<'0'||(int)ox[p_idx]>'9')&&sta>0){
+				endd = p_idx;
+				std::cout<<ox[p_idx-1]<<std::endl;
+				break;
+			}
+			p_idx++;
+		}
+		std::cout<<"num "<<sta<<" "<<endd<<std::endl; 
+		char *num = new char[endd-sta+1];
+		strncpy(num,ox+sta,endd-sta);
+		num[endd-sta]='\0';
+		int cl = atoi(num);
+		r->req_header->content_length = cl;
+		delete[] num;
+		num = NULL;
+	}
 	std::cout<<"header lines"<<std::endl;
 	std::cout<<ox<<std::endl;
+	delete[] ox;
+	ox = NULL;
 };
 bool parser_req_header(Request *r,int header_size){
-	//std::cout<<"this is a header"<<std::endl;
+	std::cout<<"this is a header"<<std::endl;
 	//std::cout<<r->req_header->content<<std::endl;
 	//std::cout<<r->req_header->content_size<<std::endl;
 	//std::cout<<header_size<<std::endl;
@@ -168,20 +204,21 @@ bool parser_req_header(Request *r,int header_size){
 	char *p = r->req_header->content;
 	while(p_idx+1<header_size){
 		if(p[p_idx]=='\r'&&p[p_idx+1]=='\n'){
-			std::cout<<p_idx<<std::endl;
+			//std::cout<<p_idx<<std::endl;
 			parser_req_header_line(r,p+sta,p_idx-sta);
+			//std::cout<<r->req_header->content<<std::endl;
 			sta = p_idx+2;
 			p_idx = sta;
 		}
 		p_idx++;
 	}
-	
+	std::cout<<"header end"<<std::endl;
 	return true;
 	
 };
 //bool parser_header()
 void http_parser(Request *r){
-	//std::cout<<r->content<<std::endl;
+	std::cout<<r->content<<std::endl;
 	//char *p = r->content;
 	std::cout<<msg_header_iscomplete(r->content,r->content_size)<<std::endl;
 	//int header_end = 0;
@@ -202,6 +239,7 @@ void http_parser(Request *r){
 	r->req_line->content = new char[http_req_line_end+3];
 	//std::cout<<http_req_line_end<<std::endl;
 	strncpy(r->req_line->content,r->content,http_req_line_end+3);
+	//std::cout<<r->req_line->content<<std::endl;
 	if(!parser_req_line(r,http_req_line_end)){
 		//500
 		return;
@@ -209,11 +247,14 @@ void http_parser(Request *r){
 	//std::cout<<r->content+http_req_line_end+3<<std::endl;
 	r->req_header->content = new char[msg_end - http_req_line_end];
 	strncpy(r->req_header->content,r->content+http_req_line_end+3,msg_end - http_req_line_end);
+	//std::cout<<r->req_header->content<<std::endl;
 	if(!parser_req_header(r,msg_end - http_req_line_end)){
 		return;
 	}
-	//std::cout<<"cout body"<<std::endl;
-	//std::cout<<r->content+265<<std::endl;
+	std::cout<<r->req_header->connection<<std::endl;
+	std::cout<<r->req_header->content_length<<std::endl;
+	std::cout<<"cout body"<<std::endl;
+	std::cout<<r->content+msg_end+5<<std::endl;
 	//char *ppp = new char[5060];
 	//std::cout<<"akkkkkk"<<std::endl;
 	//strncpy(ppp,r->content+265,5060);
