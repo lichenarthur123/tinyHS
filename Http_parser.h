@@ -134,6 +134,8 @@ void Response_clear(Response **r);
 int msg_header_iscomplete(char *content,int size);
 int get_req_line_end(char *msg_header,int size);
 bool parser_req_line(Request *r,int req_line_end);
+void parser_req_header_line(Request *r,char *line,int line_size);
+bool parser_req_header(Request *r,int header_size);
 void http_parser(Request *r);
 bool parser_url(Request *r,char *url,int size);
 #endif

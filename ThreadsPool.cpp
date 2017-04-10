@@ -59,14 +59,14 @@ bool ThreadsPool::add(int epollfd,int conn,char *read_buff,int buff_size,int req
         else{
             Request *r;
             request_init(&r);
-            std::cout<<"insert null"<<std::endl;
+            //std::cout<<"insert null"<<std::endl;
             r->content_size = buff_size;
-            std::cout<<"insert null"<<std::endl;
+            //std::cout<<"insert null"<<std::endl;
             r->content = read_buff;
             req_pool.insert(std::make_pair<int,Request*>(conn,r));
-            std::cout<<req_pool.size()<<std::endl;
+            //std::cout<<req_pool.size()<<std::endl;
 
-            std::cout<<"insert null"<<std::endl;
+            //std::cout<<"insert null"<<std::endl;
             //return true;
 	}
     }
@@ -103,15 +103,17 @@ void ThreadsPool::run(){
                 std::cout<<"parsering"<<std::endl;
                 //parser request
                 http_parser(req);
-                std::cout<<req->req_line->content<<std::endl;
-                std::cout<<req->req_line->method<<std::endl;
-                std::cout<<req->req_line->version<<std::endl;
-                if(req->req_line->url->abs_path)
-                std::cout<<req->req_line->url->abs_path<<std::endl;
-                if(req->req_line->url->query)
-                std::cout<<req->req_line->url->query<<std::endl;
-                if(req->req_line->url->fragment)
-                std::cout<<req->req_line->url->fragment<<std::endl;
+								std::cout<<req->content_size<<std::endl;
+								std::cout<<req->content<<std::endl;
+                //std::cout<<req->req_line->content<<std::endl;
+                //std::cout<<req->req_line->method<<std::endl;
+                //std::cout<<req->req_line->version<<std::endl;
+                //if(req->req_line->url->abs_path)
+                //std::cout<<req->req_line->url->abs_path<<std::endl;
+                //if(req->req_line->url->query)
+                //std::cout<<req->req_line->url->query<<std::endl;
+                //if(req->req_line->url->fragment)
+                //std::cout<<req->req_line->url->fragment<<std::endl;
             }
             else{
                 continue;

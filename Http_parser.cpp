@@ -71,7 +71,7 @@ bool parser_url(Request *r,char *url,int size){
 		if(url[i] == '#')
 			sharp = i;
 	}
-	std::cout<<quote<<" "<<sharp<<" "<<size<<std::endl;
+	//std::cout<<quote<<" "<<sharp<<" "<<size<<std::endl;
 	if(quote == 0)
 		quote = size;
 	if(sharp == 0)
@@ -106,7 +106,7 @@ bool parser_req_line(Request *r,int req_line_end){
 			if(first_b!=0 && second_b!=0)break;
 		}
 	}
-	std::cout<<first_b<<" "<<second_b<<std::endl;
+	//std::cout<<first_b<<" "<<second_b<<std::endl;
 	if(first_b==0 || second_b==0)
 		return false;
 	char *method = new char[first_b+1];
@@ -150,6 +150,35 @@ bool parser_req_line(Request *r,int req_line_end){
 	return true;
 
 };
+void parser_req_header_line(Request *r,char *line,int line_size){
+	char *ox = new char[line_size+1];
+	strncpy(ox,line,line_size);
+	ox[line_size]='\0';
+	std::cout<<"header lines"<<std::endl;
+	std::cout<<ox<<std::endl;
+};
+bool parser_req_header(Request *r,int header_size){
+	//std::cout<<"this is a header"<<std::endl;
+	//std::cout<<r->req_header->content<<std::endl;
+	//std::cout<<r->req_header->content_size<<std::endl;
+	//std::cout<<header_size<<std::endl;
+	//std::cout<<header_size<<std::endl;
+	int sta=0;
+	int p_idx = 0;
+	char *p = r->req_header->content;
+	while(p_idx+1<header_size){
+		if(p[p_idx]=='\r'&&p[p_idx+1]=='\n'){
+			std::cout<<p_idx<<std::endl;
+			parser_req_header_line(r,p+sta,p_idx-sta);
+			sta = p_idx+2;
+			p_idx = sta;
+		}
+		p_idx++;
+	}
+	
+	return true;
+	
+};
 //bool parser_header()
 void http_parser(Request *r){
 	//std::cout<<r->content<<std::endl;
@@ -171,14 +200,23 @@ void http_parser(Request *r){
 	//if(r->content[19]=='\r')std::cout<<"y"<<std::endl;
 	//if(r->content[20]=='\n')std::cout<<"y"<<std::endl;
 	r->req_line->content = new char[http_req_line_end+3];
-	std::cout<<http_req_line_end<<std::endl;
+	//std::cout<<http_req_line_end<<std::endl;
 	strncpy(r->req_line->content,r->content,http_req_line_end+3);
 	if(!parser_req_line(r,http_req_line_end)){
 		//500
 		return;
 	}
-	std::cout<<r->content+http_req_line_end+3<<std::endl;
+	//std::cout<<r->content+http_req_line_end+3<<std::endl;
 	r->req_header->content = new char[msg_end - http_req_line_end];
 	strncpy(r->req_header->content,r->content+http_req_line_end+3,msg_end - http_req_line_end);
+	if(!parser_req_header(r,msg_end - http_req_line_end)){
+		return;
+	}
+	//std::cout<<"cout body"<<std::endl;
+	//std::cout<<r->content+265<<std::endl;
+	//char *ppp = new char[5060];
+	//std::cout<<"akkkkkk"<<std::endl;
+	//strncpy(ppp,r->content+265,5060);
+	//std::cout<<ppp<<std::endl;
 	
 };

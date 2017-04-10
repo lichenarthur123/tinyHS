@@ -63,7 +63,7 @@ void HttpServer::run()
 	        int read_size;
 	        read = read_from_socket(fd,read_size);
 	        std::cout<<read_size<<std::endl;
-	        if(read_size>0)std::cout<<read<<std::endl;
+	        //if(read_size>0)std::cout<<read<<std::endl;
 	        if(read_size==0 && read == NULL){
 	            std::cout<<"read from socket failed"<<std::endl;
 	            continue;
