@@ -58,6 +58,8 @@ struct Request_body{
 	bool is_finish;
 };
 struct Request{
+	int epollfd;
+	int connection;
 	char *content;
 	int content_size;
 	Request_line *req_line;

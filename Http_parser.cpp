@@ -2,9 +2,11 @@
 void request_line_init(Request_line **rl){
 	*rl = new Request_line;
 	(*rl)->url = new URI;
+	(*rl)->is_finish = false;
 };
 void request_header_init(Request_header **rh){
 	*rh = new Request_header;
+	(*rh)->is_finish = false;
 };
 void request_body_init(Request_body **rb){
 	*rb = new Request_body;
@@ -218,11 +220,13 @@ bool parser_req_header(Request *r,int header_size){
 };
 //bool parser_header()
 void http_parser(Request *r){
-	std::cout<<r->content<<std::endl;
+	//std::cout<<r->content<<std::endl;
 	//char *p = r->content;
-	std::cout<<msg_header_iscomplete(r->content,r->content_size)<<std::endl;
+	//if(!r->req_header->is_finish){
+	//std::cout<<msg_header_iscomplete(r->content,r->content_size)<<std::endl;
 	//int header_end = 0;
 	int msg_end = msg_header_iscomplete(r->content,r->content_size);
+	if(!r->req_header->is_finish){
 	if(msg_end == -1){//header is incomplete.
 		return;
 	}
@@ -244,6 +248,7 @@ void http_parser(Request *r){
 		//500
 		return;
 	}
+	r->req_line->is_finish = true;
 	//std::cout<<r->content+http_req_line_end+3<<std::endl;
 	r->req_header->content = new char[msg_end - http_req_line_end];
 	strncpy(r->req_header->content,r->content+http_req_line_end+3,msg_end - http_req_line_end);
@@ -251,10 +256,32 @@ void http_parser(Request *r){
 	if(!parser_req_header(r,msg_end - http_req_line_end)){
 		return;
 	}
+	r->req_header->is_finish = true;
 	std::cout<<r->req_header->connection<<std::endl;
 	std::cout<<r->req_header->content_length<<std::endl;
 	std::cout<<"cout body"<<std::endl;
 	std::cout<<r->content+msg_end+5<<std::endl;
+	//if(r->req_line->method == GET){
+	//}
+	//else if(r-)
+	switch(r->req_line->method){
+		case GET:
+			{
+				//RESPONSE
+				break;
+			}
+		case POST:
+			{
+				//response
+				break;
+			}
+		default:
+			{
+				//501
+				break;
+			}
+	}
+	}
 	//char *ppp = new char[5060];
 	//std::cout<<"akkkkkk"<<std::endl;
 	//strncpy(ppp,r->content+265,5060);

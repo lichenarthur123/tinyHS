@@ -59,6 +59,8 @@ bool ThreadsPool::add(int epollfd,int conn,char *read_buff,int buff_size,int req
         else{
             Request *r;
             request_init(&r);
+            r->epollfd = epollfd;
+            r->connection = conn;
             //std::cout<<"insert null"<<std::endl;
             r->content_size = buff_size;
             //std::cout<<"insert null"<<std::endl;
@@ -103,8 +105,8 @@ void ThreadsPool::run(){
                 std::cout<<"parsering"<<std::endl;
                 //parser request
                 http_parser(req);
-								std::cout<<req->content_size<<std::endl;
-								std::cout<<req->content<<std::endl;
+		std::cout<<req->content_size<<std::endl;
+		std::cout<<req->content<<std::endl;
                 //std::cout<<req->req_line->content<<std::endl;
                 //std::cout<<req->req_line->method<<std::endl;
                 //std::cout<<req->req_line->version<<std::endl;
